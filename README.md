@@ -15,15 +15,15 @@ Creación del proyecto con: **npm init -y** _(Inicializa un proyecto en Node.js)
 
 **Configuración Archivo .env**
 
-PORT=4000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=nombre_base_de_datos
-DB_USER=nombre usuario por lo general si es postgresql seria **postgres**
-DB_PASSWORD=contraseña con la que inicia el postgres
-JWT_SECRET=7a3d5e6b1f9c84c92f9e3e1b5f3b0a19d9c42b8275c2a9f5b7a08d9e3d7c1e2f (es un ejemplo)
+- PORT=4000
+- DB_HOST=localhost
+- DB_PORT=5432
+- DB_NAME=nombre_base_de_datos
+- DB_USER=nombre usuario por lo general si es postgresql seria **postgres**
+- DB_PASSWORD=contraseña con la que inicia el postgres
+- JWT_SECRET=7a3d5e6b1f9c84c92f9e3e1b5f3b0a19d9c42b8275c2a9f5b7a08d9e3d7c1e2f (es un ejemplo)
 
-(Este JWT_SECRET puede generarlo entrando a git bash con el comando: **node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"** 
+- _(Este JWT_SECRET puede generarlo entrando a git bash con el comando:_ **node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"** 
 generara algo como: **7a3d5e6b1f9c84c92f9e3e1b5f3b0a19d9c42b8275c2a9f5b7a08d9e3d7c1e2f** 
 
 
