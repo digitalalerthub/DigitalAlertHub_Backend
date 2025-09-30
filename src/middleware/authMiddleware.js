@@ -1,15 +1,16 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-export const protect = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
+export const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization; // "Bearer token"
+  if (!authHeader) return res.status(403).json({ message: "Token requerido" });
 
-  if (!token) return res.status(401).json({ message: 'No autorizado, token no encontrado' });
-
+  const token = authHeader.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.userId = decoded.id; // guardar id del usuario
+    req.rol = decoded.rol;   // guardar rol
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Token inválido' });
+    res.status(401).json({ message: "Token inválido" });
   }
 };

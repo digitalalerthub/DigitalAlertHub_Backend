@@ -1,30 +1,25 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import authRoutes from './src/routes/authRoutes.js';
-import sequelize from './src/config/db.js';
-import User from './src/models/User.js'; // 👈 Importar modelo para sincronizar
+// server.js
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import sequelize from "./src/config/db.js";
+import authRoutes from "./src/routes/authRoutes.js";
 
 dotenv.config();
-
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Sincronizar base de datos
-(async () => {
-  try {
-    await sequelize.sync({ alter: true }); 
-    console.log("✅ Tabla Users creada o actualizada correctamente");
-  } catch (error) {
-    console.error("❌ Error al sincronizar la base de datos:", error);
-  }
-})();
+// rutas
+app.use("/api/auth", authRoutes);
 
-// Rutas
-app.use('/api/auth', authRoutes);
+// probar conexión (sin modificar tablas)
+sequelize.authenticate()
+  .then(() => console.log("✅ Conexión a PostgreSQL exitosa"))
+  .catch(err => console.error("❌ Error al conectar a BD:", err));
 
+// iniciar servidor
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Servidor en http://localhost:${PORT}`));
+
