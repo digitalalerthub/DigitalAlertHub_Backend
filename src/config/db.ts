@@ -1,28 +1,35 @@
-import { Sequelize } from "sequelize";
-import dotenv from "dotenv";
+// src/config/db.ts
+import { Sequelize } from "sequelize"
+import dotenv from "dotenv"
 
-dotenv.config();
+dotenv.config()
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME as string,      // Nombre de la BD
-  process.env.DB_USER as string,      // Usuario
-  process.env.DB_PASSWORD as string,  // Contraseña
+export const sequelize = new Sequelize(
+  process.env.DB_NAME as string,
+  process.env.DB_USER as string,
+  process.env.DB_PASSWORD as string,
   {
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 5432,
     dialect: "postgres",
-    logging: true, // Desactiva logs SQL (opcional)
+    logging: process.env.NODE_ENV === "development", // solo logs en dev
   }
-);
+)
 
-// Prueba inmediata de conexión
-(async () => {
+export const connectDB = async (): Promise<void> => {
   try {
-    await sequelize.authenticate();
-    console.log("✅ Conexión a PostgreSQL establecida correctamente.");
-  } catch (error) {
-    console.error("❌ Error al conectar con PostgreSQL:", error);
-  }
-})();
+    await sequelize.authenticate()
+    console.log("✅ Conexión a PostgreSQL establecida correctamente.")
 
-export default sequelize;
+    if (process.env.NODE_ENV === "development") {
+      await sequelize.sync({ alter: true })
+      console.log("🛠️ Modelos sincronizados con la base de datos.")
+    }
+  } catch (error) {
+    console.error("❌ Error al conectar con PostgreSQL:", error)
+    process.exit(1)
+  }
+}
+
+
+

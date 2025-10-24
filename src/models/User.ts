@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/db';
+import { DataTypes, Model, Optional } from "sequelize";
+import { sequelize } from "../config/db";
 
 // 🔹 Definimos los atributos que tiene la tabla
 interface UsuarioAttributes {
@@ -14,11 +14,13 @@ interface UsuarioAttributes {
 }
 
 // 🔹 Para crear un usuario, no se necesita el id (lo genera la BD)
-type UsuarioCreationAttributes = Optional<UsuarioAttributes, 'id_usuario'>;
+type UsuarioCreationAttributes = Optional<UsuarioAttributes, "id_usuario">;
 
 // 🔹 Clase del modelo con tipado fuerte
-class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes>
-  implements UsuarioAttributes {
+class Usuario
+  extends Model<UsuarioAttributes, UsuarioCreationAttributes>
+  implements UsuarioAttributes
+{
   public id_usuario!: number;
   public id_rol!: number;
   public nombre!: string;
@@ -53,6 +55,9 @@ Usuario.init(
       type: DataTypes.STRING(150),
       allowNull: false,
       unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
     contrasena: {
       type: DataTypes.STRING(255),
@@ -70,9 +75,8 @@ Usuario.init(
   },
   {
     sequelize, // conexión a la BD
-    tableName: 'usuarios',
+    tableName: "usuarios",
     timestamps: false, // evita createdAt / updatedAt automáticos
-    
   }
 );
 
