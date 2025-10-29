@@ -1,38 +1,132 @@
-DigitalAlertHub_Backend
-Backend de aplicación web Digital Alert Hub
+#  DigitalAlertHub_Backend
+Backend de la aplicación web **Digital Alert Hub**
 
-Creación del proyecto con: npm init -y (Inicializa un proyecto en Node.js)
+Este proyecto provee la API REST y la lógica del lado del servidor para **Digital Alert Hub**, un sistema de alertas comunitarias que conecta a los ciudadanos, Juntas de Acción Comunal (JAC) y alcaldías para reportar y gestionar problemas locales como riesgos de deslizamiento, deterioro de vías o fallas en servicios públicos.
 
-## ⚙️ Tecnologías principales
+---
+
+##  Tecnologías principales
 
 | Tecnología | Uso |
 |-------------|------|
 | **Node.js** | Entorno de ejecución para el backend |
-| **Express** | Framework para crear API REST |
+| **Express** | Framework minimalista para crear API REST |
 | **TypeScript** | Tipado estático y mejor mantenimiento del código |
-| **Sequelize** | ORM para trabajar con PostgreSQL |
+| **Sequelize** | ORM para interactuar con PostgreSQL usando modelos |
 | **PostgreSQL** | Base de datos relacional |
 | **JWT (jsonwebtoken)** | Autenticación segura mediante tokens |
-| **bcrypt** | Encriptación de contraseñas |
+| **bcrypt** | Encriptación de contraseñas de usuarios |
 | **dotenv** | Manejo de variables de entorno |
-| **cors** | Permite peticiones del frontend (React) |
+| **cors** | Permite peticiones del frontend (React u otros) |
+| **nodemailer** | Envío de correos electrónicos (confirmación de cuenta, recuperación de contraseña, notificaciones) |
+
+
+##  Configuración del entorno
+
+1. **Instalar dependencias**
+   ```bash
+   npm install
+   ```
+
+2. **Archivo `.env`**
+   Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido (ajusta los valores según tu configuración):
+
+   ```env
+   PORT=4000
+
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=nombre_base_de_datos
+   DB_USER=postgres
+   DB_PASSWORD=contraseña_postgres
+
+   JWT_SECRET=7a3d5e6b1f9c84c92f9e3e1b5f3b0a19d9c42b8275c2a9f5b7a08d9e3d7c1e2f
+
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_SECURE=false
+   EMAIL_USER=tu_correo@example.com
+   EMAIL_PASS=tu_contraseña_o_token_app
+   ```
+
+   >  Puedes generar tu propio JWT_SECRET ejecutando este comando en Git Bash o terminal:
+   >
+   > ```bash
+   > node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+   > ```
 
 ---
 
-PORT=4000
+##  Ejecución del proyecto
 
-DB_HOST=localhost
+Para iniciar el servidor en modo desarrollo con **nodemon**:
+```bash
+npm run dev
+```
 
-DB_PORT=5432
+El servidor se ejecutará por defecto en:
+```
+http://localhost:4000
+```
 
-DB_NAME=nombre_base_de_datos
+---
 
-DB_USER=nombre usuario por lo general si es postgresql seria postgres
+##  Nodemailer – Configuración de correos
 
-DB_PASSWORD=contraseña con la que inicia el postgres
+El backend incluye la integración con **Nodemailer**, lo que permite:
+- Enviar correos de **verificación de cuenta**.
+- Recuperar contraseñas olvidadas.
+- Notificar a usuarios o administradores sobre **nuevas alertas registradas**.
 
-JWT_SECRET=7a3d5e6b1f9c84c92f9e3e1b5f3b0a19d9c42b8275c2a9f5b7a08d9e3d7c1e2f (es un ejemplo)
+El transportador de correo puede configurarse para diferentes servicios (Gmail, Outlook, Zoho, etc.):
 
-(Este JWT_SECRET puede generarlo entrando a git bash con el comando: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))" generara algo como: 7a3d5e6b1f9c84c92f9e3e1b5f3b0a19d9c42b8275c2a9f5b7a08d9e3d7c1e2f
+```ts
+import nodemailer from "nodemailer";
 
-Ejecución del proyecto con: npm run dev
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: Number(process.env.EMAIL_PORT) || 587,
+  secure: process.env.EMAIL_SECURE === "true",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+```
+
+---
+
+##  Scripts útiles
+
+| Comando | Descripción |
+|----------|--------------|
+| `npm run dev` | Ejecuta el servidor en modo desarrollo (con Nodemon) |
+| `npm run build` | Compila el código TypeScript a JavaScript |
+| `npm start` | Ejecuta el servidor en producción |
+
+---
+
+##  Base de datos
+
+El proyecto utiliza **PostgreSQL** y **Sequelize** para la gestión ORM.
+Las migraciones y modelos se definen dentro de `/src/models` y pueden sincronizarse automáticamente al iniciar el servidor.
+
+---
+
+##  Dependencias principales
+
+```bash
+npm install express sequelize pg pg-hstore jsonwebtoken bcrypt dotenv cors nodemailer
+```
+
+##  Dependencias de desarrollo
+
+```bash
+npm install -D typescript ts-node-dev @types/express @types/node @types/jsonwebtoken @types/bcrypt @types/cors
+```
+
+---
+
+##  Autor
+**Digital Alert Hub – Equipo de desarrollo**  
+Backend mantenido con Node.js, Express y TypeScript.
