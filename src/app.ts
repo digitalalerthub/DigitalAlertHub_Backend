@@ -13,7 +13,7 @@ app.use("/api/auth", authRoutes)
 
 // endpoint raíz
 app.get("/", (req: Request, res: Response) => {
-  res.send("🚀 API DigitalAlertHub activa")
+  res.send("API DigitalAlertHub activa")
 })
 
 export default app
